@@ -1,17 +1,11 @@
-import React, {
-  cloneElement,
-  useCallback,
-  useEffect,
-  useState,
-  useRef,
-} from "react"
+import React, { cloneElement, useRef } from "react"
 import { motion } from "framer-motion"
 import styled from "styled-components"
-import { ChevronLeft, ChevronRight } from "react-feather"
-import { useResize } from "@rent_avail/utils"
+
 import { useInViewAnimation } from "utils/animation"
 import { Container, Box, Card, Stack } from "@rent_avail/layout"
 import { Text } from "@rent_avail/typography"
+import { CardsControl, useCards } from "components/molecules/Cards"
 import SkewBox from "components/molecules/SkewBox"
 import { STYLING } from "config"
 
@@ -28,20 +22,7 @@ const TestimonialsStack = styled(Stack)`
   position: relative;
   display: inline-flex;
 `
-const ScrollControlsContainer = styled(Box)`
-  text-align: right;
-  > * {
-    margin: 1rem;
-    opacity: 0.9;
-    &.scrollControlEnabled:hover {
-      cursor: pointer;
-      opacity: 1;
-    }
-    &.scrollControlDisabled {
-      opacity: 0.3;
-    }
-  }
-`
+
 const Testimonial = styled(Card)`
   flex: 1 0 auto;
   width: 26rem;
@@ -68,73 +49,12 @@ function TestimonialsCards({
   const containerRef = useRef()
   const scrollRef = useRef()
   const childrenRef = useRef([])
-  const containerObserver = useRef()
 
-  const containerRect = useResize(containerRef)
-
-  const [scrollSpace, setScrollSpace] = useState(0)
-  const [mayScrollLeft, setMayScrollLeft] = useState(false)
-  const [mayScrollRight, setMayScrollRight] = useState(false)
-
-  useEffect(() => {
-    const container = containerRef.current
-    if (!container || !getComputedStyle) return
-    const { marginLeft, paddingLeft } = getComputedStyle(container)
-    setScrollSpace(parseInt(marginLeft, 10) + parseInt(paddingLeft, 10))
-  }, [containerRect])
-
-  useEffect(() => {
-    containerObserver.current?.disconnect()
-
-    function observerCb(entries) {
-      entries.forEach((entry) => {
-        const isVisible = entry.isIntersecting
-        const { previousSibling, nextSibling } = entry.target.parentElement
-        if (previousSibling === null) setMayScrollLeft(!isVisible)
-        if (nextSibling === null) setMayScrollRight(!isVisible)
-      })
-    }
-    const observerOptions = {
-      root: containerRef.current,
-      threshold: 1.0,
-    }
-    containerObserver.current = new IntersectionObserver(
-      observerCb,
-      observerOptions
-    )
-
-    const first = childrenRef.current[0]
-    if (first) containerObserver.current.observe(first)
-
-    const last = childrenRef.current[childrenRef.current.length - 1]
-    if (last) containerObserver.current.observe(last)
-
-    return () => {
-      containerObserver.current?.disconnect()
-    }
-  }, [containerRef, childrenRef])
-
-  const scrollLeft = useCallback(() => {
-    const leftClipped = childrenRef.current.find(
-      ({ offsetLeft, offsetWidth }) =>
-        offsetLeft + offsetWidth - scrollRef.current.scrollLeft >
-        0 - containerRect.width
-    )
-    if (leftClipped) {
-      scrollRef.current.scrollTo(leftClipped.offsetLeft, 0)
-    }
-  }, [containerRect, scrollRef, childrenRef])
-
-  const scrollRight = useCallback(() => {
-    const rightClipped = childrenRef.current.find(
-      ({ offsetLeft, offsetWidth }) =>
-        offsetLeft + offsetWidth - scrollRef.current.scrollLeft >
-        containerRect.width
-    )
-    if (rightClipped) {
-      scrollRef.current.scrollTo(rightClipped.offsetLeft, 0)
-    }
-  }, [containerRect, scrollRef, childrenRef])
+  const { scrollSpace, cardsControls } = useCards({
+    containerRef,
+    scrollRef,
+    childrenRef,
+  })
 
   const [presets, animationIntersectionView] = useInViewAnimation()
   const animation = presets[animationPreset]
@@ -199,26 +119,7 @@ function TestimonialsCards({
               )}
             </TestimonialsStack>
           </CarouselBox>
-          {(mayScrollLeft || mayScrollRight) && (
-            <ScrollControlsContainer>
-              <ChevronLeft
-                onClick={() => mayScrollLeft && scrollLeft()}
-                className={
-                  mayScrollLeft
-                    ? "scrollControlEnabled"
-                    : "scrollControlDisabled"
-                }
-              />
-              <ChevronRight
-                onClick={() => mayScrollRight && scrollRight()}
-                className={
-                  mayScrollRight
-                    ? "scrollControlEnabled"
-                    : "scrollControlDisabled"
-                }
-              />
-            </ScrollControlsContainer>
-          )}
+          <CardsControl {...cardsControls} />
         </Box>
       </Container>
     </SkewBox>
