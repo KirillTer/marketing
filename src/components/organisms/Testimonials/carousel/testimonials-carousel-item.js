@@ -1,5 +1,6 @@
 import React from "react"
 import { Box } from "@rent_avail/layout"
+import { useLevelEffect } from "components/elements/LevelEffect"
 
 function TestimonialsCarouselItem({
   picture,
@@ -11,12 +12,12 @@ function TestimonialsCarouselItem({
   sx,
   ...props
 }) {
-  const [opacity, scale] = (() => {
-    if (level >= 3) return [0.9, 0.5625]
-    if (level === 2) return [0.75, 0.625]
-    if (level === 1) return [0.5, 0.75]
-    return [0, 1]
-  })()
+  const { opacity, scale } = useLevelEffect({
+    level,
+    levelRange: [0, 2],
+    opacityRange: [0, 0.75],
+    scaleRange: [1, 0.625],
+  })
 
   return (
     <Box

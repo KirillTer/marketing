@@ -1,6 +1,6 @@
 import React, { cloneElement, useRef } from "react"
-import { motion } from "framer-motion"
 import styled from "styled-components"
+import { motion } from "framer-motion"
 
 import { useInViewAnimation } from "utils/animation"
 import { Container, Box, Card, Stack } from "@rent_avail/layout"
@@ -9,31 +9,9 @@ import { CardsControl, useCards } from "components/molecules/Cards"
 import SkewBox from "components/molecules/SkewBox"
 import { STYLING } from "config"
 
-const CarouselBox = styled(Box)`
-  overflow: scroll;
-  scroll-behavior: smooth;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-`
 const TestimonialsStack = styled(Stack)`
   position: relative;
   display: inline-flex;
-`
-
-const Testimonial = styled(Card)`
-  flex: 1 0 auto;
-  width: 26rem;
-  height: 100%;
-  display: flex;
-  gap: 1rem;
-  flex-flow: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  border-radius: 12px;
 `
 
 function TestimonialsCards({
@@ -72,22 +50,33 @@ function TestimonialsCards({
               sx: { ...STYLING.headline, ...title?.props?.sx },
               mb: "2rem",
             })}
-          <CarouselBox
+          <Box
             ref={scrollRef}
-            pb="1rem"
-            mx={`-${scrollSpace}px`}
-            px={`${scrollSpace}px`}
+            sx={{
+              padding: `0 ${scrollSpace}px 1rem ${scrollSpace}px`,
+              margin: `0 -${scrollSpace}px`,
+              overflow: "scroll",
+              scrollBehavior: "smooth",
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
+            }}
           >
             <TestimonialsStack
               wrapChildren
               direction={["row"]}
-              sx={{ "& > *:last-child": { marginRight: 0 } }}
+              sx={{
+                "& > *:last-child": {
+                  marginRight: 0,
+                },
+              }}
               forwardedAs={motion.div}
               {...animation?.container}
             >
               {testimonials.map(
                 ({ picture, author, titleAndLocation, quote: Quote }, idx) => (
-                  <Testimonial
+                  <Card
+                    flex="1 0 auto"
                     as={motion.div}
                     {...animation?.item}
                     key={`${author}-${titleAndLocation}`}
@@ -96,6 +85,17 @@ function TestimonialsCards({
                     }}
                     bg={testimonialBg}
                     color={testimonialColor}
+                    sx={{
+                      width: "26rem",
+                      height: "100%",
+                      display: "flex",
+                      gap: "1rem",
+                      flexFlow: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      textAlign: "center",
+                      borderRadius: "12px",
+                    }}
                   >
                     <Box flex={1}>
                       {typeof Quote === "function" ? <Quote /> : Quote}
@@ -114,11 +114,11 @@ function TestimonialsCards({
                       <h5>{author}</h5>
                       <Text>{titleAndLocation}</Text>
                     </Box>
-                  </Testimonial>
+                  </Card>
                 )
               )}
             </TestimonialsStack>
-          </CarouselBox>
+          </Box>
           <CardsControl {...cardsControls} />
         </Box>
       </Container>

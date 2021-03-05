@@ -11,7 +11,7 @@ function useCards({ containerRef, scrollRef, childrenRef }) {
 
   useEffect(() => {
     const container = containerRef.current
-    if (!container || !getComputedStyle) return
+    if (!container) return
     const { marginLeft, paddingLeft } = getComputedStyle(container)
     setScrollSpace(parseInt(marginLeft, 10) + parseInt(paddingLeft, 10))
   }, [containerRect])

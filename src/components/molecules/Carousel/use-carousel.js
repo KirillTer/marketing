@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
-function useCarousel(items, {
-  interval = 3,
-  disableIntervalOnSelect = true,
-} = {}) {
-  const [ currentInterval, setCurrentInterval ] = useState(interval)
-  const [ activeIndex, setActiveIndex ] = useState(0)
+function useCarousel(
+  items,
+  { interval = 3, disableIntervalOnSelect = true } = {}
+) {
+  const [currentInterval, setCurrentInterval] = useState(interval)
+  const [activeIndex, setActiveIndex] = useState(0)
 
   const getSafeIndex = useCallback(
     (desiredIndex) => {
@@ -55,7 +55,7 @@ function useCarousel(items, {
     visibleItem(2),
   ]
 
-  return [ activeItem, visibleItems ]
+  return [activeItem, visibleItems]
 }
 
 export { useCarousel }
