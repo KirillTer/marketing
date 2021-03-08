@@ -4,10 +4,10 @@ import { Box, Grid, Flex } from "@rent_avail/layout"
 import { Text } from "@rent_avail/typography"
 import { useInViewAnimation } from "utils/animation"
 
-import { useCarousel } from "components/molecules/Carousel/use-carousel"
 import SkewBox from "components/molecules/SkewBox"
 import BoxedTitleSection from "components/molecules/BoxedTitleSection"
 import { STYLING } from "config"
+import useCarousel from "./use-carousel"
 import TestimonialsCarouselItem from "./testimonials-carousel-item"
 
 function TestimonialsCarousel({

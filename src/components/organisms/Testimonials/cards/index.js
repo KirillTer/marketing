@@ -1,13 +1,14 @@
 import React, { cloneElement, useRef } from "react"
 import styled from "styled-components"
 import { motion } from "framer-motion"
-
 import { useInViewAnimation } from "utils/animation"
 import { Container, Box, Card, Stack } from "@rent_avail/layout"
 import { Text } from "@rent_avail/typography"
-import { CardsControl, useCards } from "components/molecules/Cards"
+
 import SkewBox from "components/molecules/SkewBox"
 import { STYLING } from "config"
+import useCards from "./use-cards"
+import CardsControl from "./cards-control"
 
 const TestimonialsStack = styled(Stack)`
   position: relative;

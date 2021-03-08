@@ -1,6 +1,6 @@
 import React from "react"
 import { Box } from "@rent_avail/layout"
-import { useLevelEffect } from "components/elements/LevelEffect"
+import { useLevelEffect } from "utils/animation"
 
 function TestimonialsCarouselItem({
   picture,
