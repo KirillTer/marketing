@@ -58,4 +58,4 @@ function useCarousel(
   return [activeItem, visibleItems]
 }
 
-export { useCarousel }
+export default useCarousel
